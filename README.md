@@ -1,1 +1,3 @@
 # myhub
+
+hello .git
