@@ -1,3 +1,3 @@
 # myhub
 
-hello .git
+hello there are some notebook for me
