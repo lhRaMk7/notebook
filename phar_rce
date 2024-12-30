@@ -1,6 +1,6 @@
 A vulnerability categorized as critical has been discovered in the SparkShop (Spark Mall) B2C Mall. This vulnerability affects certain functions of the unauthorized interface file app/api/controller/Common.php. Manipulation of the file parameter results in arbitrary file uploads, which can be exploited by uploading a crafted phar file and using the changeImg method's improper handling during image conversion to achieve phar deserialization attacks. Combined with the command execution vulnerability in ThinkPHP 6.x, this can lead to remote code execution (RCE).
 
-![image.png](https://obtuchaung-1321169885.cos.ap-chengdu.myqcloud.com/E:%5Cnotebook%5C%E5%9B%BE%E7%89%8720241228022750.png)
+![image.png](https://github.com/lhRaMk7/notebook/blob/main/E__notebook_%E5%9B%BE%E7%89%8720241228022750.png)
 
 And here, only the blacklist is used to disable our file extensions, while bypassing content detection can be achieved by exceeding the corresponding file size.
 ![image.png](https://obtuchaung-1321169885.cos.ap-chengdu.myqcloud.com/E:%5Cnotebook%5C%E5%9B%BE%E7%89%8720241228023022.png)
