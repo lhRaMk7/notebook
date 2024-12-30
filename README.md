@@ -1,3 +1,3 @@
 # myhub
 
-hello there are some notebook for me
+hello there are some notes for me
